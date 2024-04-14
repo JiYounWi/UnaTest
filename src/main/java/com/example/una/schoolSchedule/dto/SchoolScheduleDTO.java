@@ -1,7 +1,10 @@
 package com.example.una.schoolSchedule.dto;
 
-public class dto {
+import jakarta.persistence.Id;
+
+public class SchoolScheduleDTO {
     private String ATPT_OFCDC_SC_CODE;
+    @Id
     private String SD_SCHUL_CODE;
     private String DGHT_CRSE_SC_NM;
     private String SCHUL_CRSE_SC_NM;
@@ -9,7 +12,7 @@ public class dto {
     private String AA_FROM_YMD;
     private String AA_TO_YMD;
 
-    public dto(String ATPT_OFCDC_SC_CODE, String SD_SCHUL_CODE, String DGHT_CRSE_SC_NM, String SCHUL_CRSE_SC_NM, String AA_YMD, String AA_FROM_YMD, String AA_TO_YMD) {
+    public SchoolScheduleDTO(String ATPT_OFCDC_SC_CODE, String SD_SCHUL_CODE, String DGHT_CRSE_SC_NM, String SCHUL_CRSE_SC_NM, String AA_YMD, String AA_FROM_YMD, String AA_TO_YMD) {
         this.ATPT_OFCDC_SC_CODE = ATPT_OFCDC_SC_CODE;
         this.SD_SCHUL_CODE = SD_SCHUL_CODE;
         this.DGHT_CRSE_SC_NM = DGHT_CRSE_SC_NM;
