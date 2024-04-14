@@ -1,9 +1,11 @@
 package com.example.una.schoolSchedule.dto;
 
+import com.example.una.schoolSchedule.domain.SchoolSchedule;
 import jakarta.persistence.Id;
 
-public class SchoolScheduleDTO {
+public class SchoolScheduleDTO extends SchoolSchedule{
     private String ATPT_OFCDC_SC_CODE;
+
     @Id
     private String SD_SCHUL_CODE;
     private String DGHT_CRSE_SC_NM;
@@ -76,5 +78,15 @@ public class SchoolScheduleDTO {
 
     public void setAA_TO_YMD(String AA_TO_YMD) {
         this.AA_TO_YMD = AA_TO_YMD;
+    }
+
+    public SchoolSchedule toEntity(){
+        return SchoolSchedule.builder()
+                .atptOfcdcScCode(ATPT_OFCDC_SC_CODE)
+                .sdSchulCode(SD_SCHUL_CODE)
+                .dghtCrseScNm(DGHT_CRSE_SC_NM)
+                .schulCrseScNm(SCHUL_CRSE_SC_NM)
+                .aaYmd(AA_YMD)
+                .build();
     }
 }

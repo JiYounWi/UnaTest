@@ -1,27 +1,33 @@
 package com.example.una.schoolSchedule.service;
 
-import com.example.una.schoolSchedule.entity.SchoolSchedule;
+import com.example.una.schoolSchedule.domain.SchoolSchedule;
+import com.example.una.schoolSchedule.dto.SchoolScheduleDTO;
 import com.example.una.schoolSchedule.repository.SchoolScheduleRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class SchoolScheduleService {
-    public List<Map<String, String>> getSchoolSchedule(Map<String, String> requestBody) throws IOException{
+
+    private final SchoolScheduleRepository schoolScheduleRepository;
+
+    public List<Map<String, String>> getSchoolSchedule(Map<String, String> requestBody) throws IOException {
         List<Map<String, String>> rows = new ArrayList<>();
 
         // API 호출을 위한 URL 생성
@@ -73,5 +79,87 @@ public class SchoolScheduleService {
         }
 
         return rows;
+    }
+
+    public void fetchAndSaveSchoolSchedule(String sdSchulCode) {
+        try {
+            // SD_SCHUL_CODE를 기준으로 이미 저장된 데이터가 있는지 확인
+            Optional<SchoolSchedule> existingSchedule = schoolScheduleRepository.findBySdSchulCode(sdSchulCode);
+
+            // 이미 저장된 데이터가 없는 경우에만 API 호출하여 데이터 가져오고 저장
+            if (existingSchedule.isEmpty()) {
+                // API 호출을 위한 URL 생성
+                String apiUrl = constructApiUrl(sdSchulCode);
+
+                // API 호출하여 데이터 가져오기
+                String jsonData = fetchDataFromApi(apiUrl);
+
+                // JSON 데이터를 엔티티로 변환하여 저장
+                saveDataToDatabase(jsonData);
+
+                // 성공적으로 저장되었음을 로그로 기록
+                log.info("School schedule data successfully fetched and saved.");
+            } else {
+                // 이미 해당 SD_SCHUL_CODE를 가진 데이터가 있으므로 저장하지 않음
+                log.info("School schedule data for SD_SCHUL_CODE {} already exists, skipping insertion.", sdSchulCode);
+            }
+        } catch (Exception e) {
+            // 에러 발생 시 에러 내용을 로그로 기록
+            log.error("Failed to fetch and save school schedule data: {}", e.getMessage());
+        }
+    }
+
+
+
+    private String constructApiUrl(String sdSchulCode) {
+        // API 호출을 위한 URL 생성 로직 작성
+        String apiUrl = "https://open.neis.go.kr/hub/SchoolSchedule?" +
+                "KEY=881fba3c77c745878cc257e8746afecd" +
+                "&ATPT_OFCDC_SC_CODE=B10" +
+                "&SD_SCHUL_CODE=" + sdSchulCode +
+                "&type=json";
+        return apiUrl;
+    }
+
+    private String fetchDataFromApi(String apiUrl) throws IOException {
+        // API 호출하여 데이터를 가져오는 로직 작성
+        URL url = new URL(apiUrl);
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestMethod("GET");
+
+        StringBuilder result = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"))) {
+            String returnLine;
+            while ((returnLine = br.readLine()) != null) {
+                result.append(returnLine);
+            }
+        } finally {
+            urlConnection.disconnect();
+        }
+        return result.toString();
+    }
+
+    private void saveDataToDatabase(String jsonData) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode root = objectMapper.readTree(jsonData);
+            JsonNode rowsNode = root.path("SchoolSchedule").get(1).path("row");
+
+            List<SchoolSchedule> schoolSchedules = new ArrayList<>();
+            for (JsonNode rowNode : rowsNode) {
+                SchoolSchedule schoolSchedule = objectMapper.treeToValue(rowNode, SchoolSchedule.class);
+                schoolSchedules.add(schoolSchedule);
+            }
+            log.info("결과 : {}",schoolSchedules);
+            schoolScheduleRepository.saveAll(schoolSchedules);
+        } catch (JsonProcessingException e) {
+            log.error("Failed to parse JSON data: {}", e.getMessage());
+        }
+    }
+
+    public void saveSchoolScheduleEntity(List<SchoolScheduleDTO> data) {
+        for (SchoolScheduleDTO schoolScheduleDTO : data) {
+            schoolScheduleRepository.save(schoolScheduleDTO.toEntity());
+        }
     }
 }

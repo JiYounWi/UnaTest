@@ -1,90 +1,95 @@
-package com.example.una.schoolSchedule.entity;
+package com.example.una.schoolSchedule.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 @Entity
-@Table(name = "school_schedule_B10")
-@IdClass(SchoolScheduleId.class)
+@Table(name = "school_schedule")
 public class SchoolSchedule {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     @Column(name = "ATPT_OFCDC_SC_CODE")
+    @JsonProperty("ATPT_OFCDC_SC_CODE")
     private String atptOfcdcScCode;
 
     @Column(name = "ATPT_OFCDC_SC_NM")
+    @JsonProperty("ATPT_OFCDC_SC_NM")
     private String atptOfcdcScNm;
 
-    @Id
     @Column(name = "SD_SCHUL_CODE")
+    @JsonProperty("SD_SCHUL_CODE")
     private String sdSchulCode;
 
-    @Id
     @Column(name = "SCHUL_NM")
+    @JsonProperty("SCHUL_NM")
     private String schulNm;
 
     @Column(name = "AY")
+    @JsonProperty("AY")
     private String ay;
 
     @Column(name = "DGHT_CRSE_SC_NM")
+    @JsonProperty("DGHT_CRSE_SC_NM")
     private String dghtCrseScNm;
 
     @Column(name = "SCHUL_CRSE_SC_NM")
+    @JsonProperty("SCHUL_CRSE_SC_NM")
     private String schulCrseScNm;
 
     @Column(name = "SBTR_DD_SC_NM")
+    @JsonProperty("SBTR_DD_SC_NM")
     private String sbtrDdScNm;
 
     @Column(name = "AA_YMD")
+    @JsonProperty("AA_YMD")
     private String aaYmd;
 
     @Column(name = "EVENT_NM")
+    @JsonProperty("EVENT_NM")
     private String eventNm;
 
     @Column(name = "EVENT_CNTNT")
+    @JsonProperty("EVENT_CNTNT")
     private String eventCntnt;
 
     @Column(name = "ONE_GRADE_EVENT_YN")
+    @JsonProperty("ONE_GRADE_EVENT_YN")
     private String oneGradeEventYn;
 
     @Column(name = "TW_GRADE_EVENT_YN")
+    @JsonProperty("TW_GRADE_EVENT_YN")
     private String twGradeEventYn;
 
     @Column(name = "THREE_GRADE_EVENT_YN")
+    @JsonProperty("THREE_GRADE_EVENT_YN")
     private String threeGradeEventYn;
 
     @Column(name = "FR_GRADE_EVENT_YN")
+    @JsonProperty("FR_GRADE_EVENT_YN")
     private String frGradeEventYn;
 
     @Column(name = "FIV_GRADE_EVENT_YN")
+    @JsonProperty("FIV_GRADE_EVENT_YN")
     private String fivGradeEventYn;
 
     @Column(name = "SIX_GRADE_EVENT_YN")
+    @JsonProperty("SIX_GRADE_EVENT_YN")
     private String sixGradeEventYn;
 
     @Column(name = "LOAD_DTM")
-    private Date loadDtm;
-
-    public SchoolSchedule(String atptOfcdcScCode, String atptOfcdcScNm, String sdSchulCode, String schulNm, String ay, String dghtCrseScNm, String schulCrseScNm, String sbtrDdScNm, String aaYmd, String eventNm, String eventCntnt, String oneGradeEventYn, String twGradeEventYn, String threeGradeEventYn, String frGradeEventYn, String fivGradeEventYn, String sixGradeEventYn, Date loadDtm) {
-        this.atptOfcdcScCode = atptOfcdcScCode;
-        this.atptOfcdcScNm = atptOfcdcScNm;
-        this.sdSchulCode = sdSchulCode;
-        this.schulNm = schulNm;
-        this.ay = ay;
-        this.dghtCrseScNm = dghtCrseScNm;
-        this.schulCrseScNm = schulCrseScNm;
-        this.sbtrDdScNm = sbtrDdScNm;
-        this.aaYmd = aaYmd;
-        this.eventNm = eventNm;
-        this.eventCntnt = eventCntnt;
-        this.oneGradeEventYn = oneGradeEventYn;
-        this.twGradeEventYn = twGradeEventYn;
-        this.threeGradeEventYn = threeGradeEventYn;
-        this.frGradeEventYn = frGradeEventYn;
-        this.fivGradeEventYn = fivGradeEventYn;
-        this.sixGradeEventYn = sixGradeEventYn;
-        this.loadDtm = loadDtm;
-    }
+    @JsonProperty("LOAD_DTM")
+    private String loadDtm;
 
     public String getAtptOfcdcScCode() {
         return atptOfcdcScCode;
@@ -222,11 +227,11 @@ public class SchoolSchedule {
         this.sixGradeEventYn = sixGradeEventYn;
     }
 
-    public Date getLoadDtm() {
+    public String getLoadDtm() {
         return loadDtm;
     }
 
-    public void setLoadDtm(Date loadDtm) {
+    public void setLoadDtm(String loadDtm) {
         this.loadDtm = loadDtm;
     }
 }

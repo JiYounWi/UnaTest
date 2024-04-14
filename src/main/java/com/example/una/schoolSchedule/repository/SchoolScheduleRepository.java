@@ -1,8 +1,11 @@
 package com.example.una.schoolSchedule.repository;
 
-import com.example.una.schoolSchedule.dto.SchoolScheduleDTO;
+import com.example.una.schoolSchedule.domain.SchoolSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-public abstract class SchoolScheduleRepository implements JpaRepository<SchoolScheduleDTO, Long> {
+import java.util.Optional;
+
+public interface SchoolScheduleRepository extends JpaRepository<SchoolSchedule, Long> {
+    Optional<SchoolSchedule> findBySdSchulCode(String sdSchulCode);
 }
+
