@@ -3,6 +3,7 @@ package com.example.una.schoolSchedule.dto;
 import com.example.una.schoolSchedule.domain.SchoolSchedule;
 import jakarta.persistence.Id;
 
+//@Data
 public class SchoolScheduleDTO extends SchoolSchedule{
     private String ATPT_OFCDC_SC_CODE;
 
