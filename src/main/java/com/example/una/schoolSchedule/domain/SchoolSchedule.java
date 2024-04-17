@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "school_schedule_test")
+@Table(name = "school_schedule")
 //@IdClass(SchoolScheduleId.class)
 public class SchoolSchedule {
 

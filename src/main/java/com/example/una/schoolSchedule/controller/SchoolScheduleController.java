@@ -23,15 +23,15 @@ public class SchoolScheduleController {
         this.schoolScheduleService = schoolScheduleService;
     }
 
-    @GetMapping("/resultSchoolSchedule")
-    public List<SchoolSchedule> ResultSchoolSchedule(){
-        return schoolScheduleService.getAllSchoolSchedules();
+    @GetMapping("/resultSchoolSchedule/{sdSchulCode}")
+    public List<SchoolSchedule> ResultSchoolSchedule(@PathVariable String sdSchulCode){
+        return schoolScheduleService.getAllSchoolSchedules(sdSchulCode);
     }
 
     @PostMapping("/getSchoolSchedule")
     public String GetSchoolSchedule(@RequestBody Map<String, String> requestBody) {
         String sdSchulCode = requestBody.get("SD_SCHUL_CODE");
         schoolScheduleService.fetchAndSaveSchoolSchedule(sdSchulCode);
-        return ResultSchoolSchedule().toString();
+        return ResultSchoolSchedule(sdSchulCode).toString();
     }
 }
