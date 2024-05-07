@@ -1,9 +1,7 @@
 package com.example.una.schoolSchedule.controller;
 
 import com.example.una.schoolSchedule.domain.SchoolSchedule;
-import com.example.una.schoolSchedule.repository.SchoolScheduleRepository;
 import com.example.una.schoolSchedule.service.SchoolScheduleService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
