@@ -104,14 +104,14 @@ public class KakaoService {
         String email = String.valueOf(account.get("email"));
         String name = String.valueOf(account.get("name"));
         String gender = String.valueOf(account.get("gender"));
-        String age_range = String.valueOf(account.get("age_range"));
+        String birthyear = String.valueOf(account.get("birthyear"));
         String phone_number = String.valueOf(account.get("phone_number"));
         String shipping_address = String.valueOf(account.get("shipping_address"));
 
         return KakaoDTO.builder()
                 .id(id)
                 .email(email)
-                .age_range(age_range)
+                .birthyear(birthyear)
                 .gender(gender)
                 .name(name)
                 .phone_number(phone_number)

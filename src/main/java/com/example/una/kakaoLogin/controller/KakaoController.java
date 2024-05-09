@@ -12,22 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-//@Slf4j
-//@RequiredArgsConstructor
-//@RestController
-//@RequestMapping("kakao")
-//public class KakaoController {
-//
-//    private final KakaoService kakaoService;
-//
-//    @GetMapping("/callback")
-//    public ResponseEntity<MsgEntity> callback(HttpServletRequest request) throws Exception{
-//        KakaoDTO kakaoInfo = kakaoService.getKakaoInfo(request.getParameter("code"));
-//
-//        return ResponseEntity.ok()
-//                .body(new MsgEntity("Success", kakaoInfo));
-//    }
-//}
 @Slf4j
 @RequiredArgsConstructor
 @RestController

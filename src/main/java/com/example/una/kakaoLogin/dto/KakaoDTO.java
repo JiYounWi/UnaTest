@@ -10,7 +10,7 @@ public class KakaoDTO {
     private String email;
     private String name;
     private String gender;
-    private String age_range;
+    private String birthyear;
     private String phone_number;
     private String shipping_address;
 }
