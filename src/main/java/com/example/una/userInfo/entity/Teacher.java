@@ -11,9 +11,11 @@ import lombok.Setter;
 public class Teacher {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "teacher_id")
-    private Long teacherId;
+    @Column(name = "teacher_kakao_id")
+    private Long teacherKakaoId;
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "teacher_id")
+//    private Long teacherId;
 
     @Column(name = "teacher_school")
     private String teacherSchool;
@@ -32,7 +34,4 @@ public class Teacher {
 
     @Column(name = "teacher_phone_number")
     private String teacherPhoneNumber;
-
-    @Column(name = "teacher_kakao_id")
-    private Long teacherKakaoId;
 }

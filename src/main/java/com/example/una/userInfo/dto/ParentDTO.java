@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ParentDTO {
-    private Long parentId;
     private String parentEmail;
     private String parentName;
     private String parentPhoneNumber;

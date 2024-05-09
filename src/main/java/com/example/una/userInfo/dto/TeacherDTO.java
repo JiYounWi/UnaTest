@@ -9,7 +9,6 @@ public class TeacherDTO {
     private String teacherSchool;
     private int teacherGrade;
     private int teacherClass;
-    private Long teacherId;
     private String teacherEmail;
     private String teacherName;
     private String teacherPhoneNumber;

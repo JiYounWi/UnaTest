@@ -13,9 +13,8 @@ import java.util.List;
 public class Parent {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "parent_id")
-    private Long parentId;
+    @Column(name = "parent_kakao_id")
+    private Long parentKakaoId;
 
     @Column(name = "parent_email")
     private String parentEmail;
@@ -25,9 +24,6 @@ public class Parent {
 
     @Column(name = "parent_phone_number")
     private String parentPhoneNumber;
-
-    @Column(name = "parent_kakao_id")
-    private Long parentKakaoId;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Child> children;
