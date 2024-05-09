@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "parentTest")
 @Getter
@@ -27,18 +29,6 @@ public class Parent {
     @Column(name = "parent_kakao_id")
     private Long parentKakaoId;
 
-    @Column(name = "child_name")
-    private String childName;
-
-    @Column(name = "child_school")
-    private String childSchool;
-
-    @Column(name = "child_grade")
-    private int childGrade;
-
-    @Column(name = "child_class")
-    private int childClass;
-
-    @Column(name = "child_number")
-    private int childNumber;
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    private List<Child> children;
 }

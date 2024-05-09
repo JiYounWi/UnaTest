@@ -11,6 +11,7 @@ public class ParentDTO {
     private String parentName;
     private String parentPhoneNumber;
     private Long parentKakaoId;
+    private Long childId;
     private String childName;
     private String childSchool;
     private int childGrade;

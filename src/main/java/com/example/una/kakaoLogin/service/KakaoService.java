@@ -92,8 +92,6 @@ public class KakaoService {
                 String.class
         );
 
-        log.info("{}", response.getBody());
-
         //Response 데이터 파싱
         JSONParser jsonParser = new JSONParser();
         JSONObject jsonObj    = (JSONObject) jsonParser.parse(response.getBody());
