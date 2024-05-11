@@ -1,14 +1,14 @@
 package com.example.una.kakaoLogin.service;
 
 import com.example.una.kakaoLogin.dto.KakaoDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -38,7 +38,7 @@ public class KakaoService {
     }
 
     public KakaoDTO getKakaoInfo(String code) throws Exception {
-        if (code == null) throw new Exception("Failed get authorization code");
+        if (code == null) throw new Exception("인가코드 없음");
 
         String accessToken = "";
         String refreshToken = "";
@@ -73,10 +73,15 @@ public class KakaoService {
             throw new Exception("API call failed");
         }
 
-        return getUserInfoWithToken(accessToken);
+        return getUserInfoWithToken(accessToken, refreshToken);
     }
 
-    private KakaoDTO getUserInfoWithToken(String accessToken) throws Exception {
+
+    private KakaoDTO getUserInfoWithToken(String accessToken, String refreshToken) throws Exception {
+        // 토큰 검증 및 재발급
+        accessToken = validateAndRefreshToken(accessToken, refreshToken);
+
+        //사용자 정보 가져오기
         //HttpHeader 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
@@ -114,6 +119,91 @@ public class KakaoService {
                 .name(name)
                 .phone_number(phone_number)
                 .shipping_address(shipping_address)
+                .access_token(accessToken)
+                .refresh_token(refreshToken)
                 .build();
+    }
+
+    public String validateAndRefreshToken(String accessToken, String refreshToken) throws Exception {
+        try {
+            // 토큰 검증을 위해 카카오 API 호출
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + accessToken);
+
+            HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
+
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response = restTemplate.exchange(
+                    KAKAO_API_URI + "/v1/user/access_token_info",
+                    HttpMethod.GET,
+                    httpEntity,
+                    String.class
+            );
+
+            // 토큰이 유효하면 그대로 반환
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return accessToken;
+            } else {
+                // 만료되었을 경우 토큰 재발급
+                return refreshToken(refreshToken);
+            }
+        } catch (Exception e) {
+            throw new Exception("Failed to validate and refresh token");
+        }
+    }
+
+    public String refreshToken(String refreshToken) throws Exception {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-type", "application/x-www-form-urlencoded");
+
+            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+            params.add("grant_type", "refresh_token");
+            params.add("client_id", KAKAO_CLIENT_ID);
+            params.add("client_secret", KAKAO_CLIENT_SECRET);
+            params.add("refresh_token", refreshToken);
+
+            RestTemplate restTemplate = new RestTemplate();
+            HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(
+                    KAKAO_AUTH_URI + "/oauth/token",
+                    HttpMethod.POST,
+                    httpEntity,
+                    String.class
+            );
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObj = (JSONObject) jsonParser.parse(response.getBody());
+
+            return (String) jsonObj.get("access_token");
+        } catch (Exception e) {
+            throw new Exception("Failed to refresh token");
+        }
+    }
+
+    private final static String KAKAO_LOGOUT_URI = "https://kapi.kakao.com";
+
+    public void kakaoLogout(String accessToken) throws Exception {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + accessToken);
+
+            HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
+
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response = restTemplate.exchange(
+                    KAKAO_LOGOUT_URI + "/v1/user/logout",
+                    HttpMethod.POST,
+                    httpEntity,
+                    String.class
+            );
+
+            if (response.getStatusCode() != HttpStatus.OK) {
+                throw new Exception("Failed to logout from Kakao");
+            }
+        } catch (Exception e) {
+            throw new Exception("Failed to logout from Kakao");
+        }
     }
 }

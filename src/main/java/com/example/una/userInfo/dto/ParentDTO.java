@@ -3,6 +3,8 @@ package com.example.una.userInfo.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class ParentDTO {
@@ -10,10 +12,5 @@ public class ParentDTO {
     private String parentName;
     private String parentPhoneNumber;
     private Long parentKakaoId;
-    private Long childId;
-    private String childName;
-    private String childSchool;
-    private int childGrade;
-    private int childClass;
-    private int childNumber;
+    private List<ChildDTO> children;
 }

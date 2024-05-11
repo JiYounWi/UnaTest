@@ -13,4 +13,6 @@ public class KakaoDTO {
     private String birthyear;
     private String phone_number;
     private String shipping_address;
+    private String access_token;
+    private String refresh_token;
 }
