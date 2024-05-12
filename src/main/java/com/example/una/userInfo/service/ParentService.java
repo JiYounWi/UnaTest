@@ -12,9 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -76,35 +74,50 @@ public class ParentService {
 //            log.error("Child with ID {} not found.", childId);
 //        }
 //    }
-public void updateChild(Long parentKakaoId, String childName, ChildDTO childDTO){
-    Optional<Parent> optionalParent = parentRepository.findByParentKakaoId(parentKakaoId);
-    if(optionalParent.isPresent()){
-        Parent parent = optionalParent.get();
-        // 부모의 자녀 목록에서 해당하는 자녀 찾기
-        Optional<Child> optionalChild = parent.getChildren().stream()
-                .filter(child -> child.getChildName().equals(childName))
-                .findFirst();
+    public void updateChild(Long parentKakaoId, String childName, ChildDTO childDTO){
+        Optional<Parent> optionalParent = parentRepository.findByParentKakaoId(parentKakaoId);
+        if(optionalParent.isPresent()){
+            Parent parent = optionalParent.get();
+            // 부모의 자녀 목록에서 해당하는 자녀 찾기
+            Optional<Child> optionalChild = parent.getChildren().stream()
+                    .filter(child -> child.getChildName().equals(childName))
+                    .findFirst();
 
-        if(optionalChild.isPresent()){
-            Child child = optionalChild.get();
-            // ChildDTO에서 수정할 자녀 정보 추출하여 업데이트
-            child.setChildSchool(childDTO.getChildSchool());
-            child.setChildGrade(childDTO.getChildGrade());
-            child.setChildClass(childDTO.getChildClass());
-            child.setChildNumber(childDTO.getChildNumber());
-            child.setChildName(childDTO.getChildName());
+            if(optionalChild.isPresent()){
+                Child child = optionalChild.get();
+                // ChildDTO에서 수정할 자녀 정보 추출하여 업데이트
+                child.setChildSchool(childDTO.getChildSchool());
+                child.setChildGrade(childDTO.getChildGrade());
+                child.setChildClass(childDTO.getChildClass());
+                child.setChildNumber(childDTO.getChildNumber());
+                child.setChildName(childDTO.getChildName());
 
-            childRepository.save(child);
-            log.info("Child with name {} under parent with Kakao ID {} updated successfully.", childName, parentKakaoId);
-        } else {
-            log.error("Child with name {} not found under parent with Kakao ID {}.", childName, parentKakaoId);
+                childRepository.save(child);
+                log.info("Child with name {} under parent with Kakao ID {} updated successfully.", childName, parentKakaoId);
+            } else {
+                log.error("Child with name {} not found under parent with Kakao ID {}.", childName, parentKakaoId);
+                // 혹은 예외를 던지거나 다른 처리 방법을 선택할 수 있습니다.
+            }
+        } else{
+            log.error("Parent with Kakao ID {} not found", parentKakaoId);
             // 혹은 예외를 던지거나 다른 처리 방법을 선택할 수 있습니다.
         }
-    } else{
-        log.error("Parent with Kakao ID {} not found", parentKakaoId);
-        // 혹은 예외를 던지거나 다른 처리 방법을 선택할 수 있습니다.
     }
-}
 
+    //연락처 조회(부모 이름, 부모 전화번호)
+    public Map<String, String> getParentInfoByKakaoId(Long parentKakaoId) {
+        Optional<Parent> optionalParent = parentRepository.findByParentKakaoId(parentKakaoId);
+        Map<String, String> parentInfo = new HashMap<>();
+        if (optionalParent.isPresent()) {
+            Parent parent = optionalParent.get();
+            parentInfo.put("parentName", parent.getParentName());
+            parentInfo.put("parentPhoneNumber", parent.getParentPhoneNumber());
+            return parentInfo;
+        } else {
+            log.error("Parent with Kakao ID {} not found.", parentKakaoId);
+            // 혹은 예외를 던지거나 다른 처리 방법을 선택할 수 있습니다.
+            return null;
+        }
+    }
 
 }

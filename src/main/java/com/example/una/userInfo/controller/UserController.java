@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Slf4j
 @RestController
 public class UserController {
@@ -46,31 +48,28 @@ public class UserController {
         }
     }
 
-//    @PutMapping("/update-child/{childId}")
-//    public ResponseEntity<String> updateChild(
-//            @PathVariable Long childId,
-//            @RequestBody ChildDTO childDTO
-//    ){
-//        try {
-//            parentService.updateChild(childId, childDTO);
-//            return ResponseEntity.ok("Child with ID " + childId + " updated successfully.");
-//        } catch (Exception e) {
-//            log.error("Error updating child with ID {}", childId, e);
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating child.");
-//        }
-//    }
-@PutMapping("/update-child/{parentKakaoId}/{childName}")
-public ResponseEntity<String> updateChild(
-        @PathVariable Long parentKakaoId,
-        @PathVariable String childName,
-        @RequestBody ChildDTO childDTO
-){
-    try {
-        parentService.updateChild(parentKakaoId, childName, childDTO);
-        return ResponseEntity.ok("Child with name " + childName + " under parent with Kakao ID " + parentKakaoId + " updated successfully.");
-    } catch (Exception e) {
-        log.error("Error updating child with name {} under parent with Kakao ID {}", childName, parentKakaoId, e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating child.");
+    @PutMapping("/update-child/{parentKakaoId}/{childName}")
+    public ResponseEntity<String> updateChild(
+            @PathVariable Long parentKakaoId,
+            @PathVariable String childName,
+            @RequestBody ChildDTO childDTO
+    ){
+        try {
+            parentService.updateChild(parentKakaoId, childName, childDTO);
+            return ResponseEntity.ok("Child with name " + childName + " under parent with Kakao ID " + parentKakaoId + " updated successfully.");
+        } catch (Exception e) {
+            log.error("Error updating child with name {} under parent with Kakao ID {}", childName, parentKakaoId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating child.");
+        }
     }
-}
+
+    @GetMapping("/parent-info/{parentKakaoId}")
+    public ResponseEntity<Map<String, String>> getParentInfo(@PathVariable Long parentKakaoId) {
+        Map<String, String> parentInfo = parentService.getParentInfoByKakaoId(parentKakaoId);
+        if (parentInfo != null) {
+            return ResponseEntity.ok(parentInfo);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

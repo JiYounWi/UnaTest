@@ -13,9 +13,6 @@ public class Teacher {
     @Id
     @Column(name = "teacher_kakao_id")
     private Long teacherKakaoId;
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "teacher_id")
-//    private Long teacherId;
 
     @Column(name = "teacher_school")
     private String teacherSchool;
