@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ChildDTO {
+    private Long childId;
     private String childName;
     private String childSchool;
     private int childGrade;
