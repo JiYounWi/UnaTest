@@ -32,4 +32,5 @@ public class SchoolScheduleController {
         schoolScheduleService.fetchAndSaveSchoolSchedule(sdSchulCode);
         return ResultSchoolSchedule(sdSchulCode).toString();
     }
+
 }

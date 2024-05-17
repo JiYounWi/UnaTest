@@ -23,6 +23,8 @@ public class KakaoController {
         // 카카오에서 받아온 인가 코드를 사용하여 사용자 정보를 가져옴
         KakaoDTO kakaoInfo = kakaoService.getKakaoInfo(request.getParameter("code"));
 
+        log.info(request.getParameter("code"));
+
         // 사용자 정보를 ResponseEntity로 반환
         return ResponseEntity.ok().body(new MsgEntity("Success", kakaoInfo));
     }

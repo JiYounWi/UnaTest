@@ -56,24 +56,6 @@ public class ParentService {
         }
     }
 
-//    public void updateChild(Long childId, ChildDTO childDTO){
-//        Optional<Child> optionalChild = childRepository.findById(childId);
-//        if(optionalChild.isPresent()){
-//            Child child = optionalChild.get();
-//
-//            // ChildDTO에서 수정할 자녀 정보 추출하여 업데이트
-//            child.setChildName(childDTO.getChildName());
-//            child.setChildSchool(childDTO.getChildSchool());
-//            child.setChildGrade(childDTO.getChildGrade());
-//            child.setChildClass(childDTO.getChildClass());
-//            child.setChildNumber(childDTO.getChildNumber());
-//
-//            childRepository.save(child);
-//            log.info("Child with ID {} updated successfully.", childId);
-//        } else{
-//            log.error("Child with ID {} not found.", childId);
-//        }
-//    }
     public void updateChild(Long parentKakaoId, String childName, ChildDTO childDTO){
         Optional<Parent> optionalParent = parentRepository.findByParentKakaoId(parentKakaoId);
         if(optionalParent.isPresent()){
